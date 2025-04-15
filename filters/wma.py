@@ -1,6 +1,6 @@
 import numpy as np
 
-#Define filters here
+#The basic filters
 def sma_filter(window):
     return np.ones(window) / window
 
@@ -18,7 +18,7 @@ def pad(prices,n):
     padding = -np.flip(prices[1:n])
     return np.append(padding, prices)
 
-def wma(prices, n, kernel):
+def wma(prices, window, filter):
     """
     Calculate the Weighted Moving Average (WMA) of a given list of prices.
     The WMA is computed by convolving the input prices with a specified kernel
@@ -26,12 +26,11 @@ def wma(prices, n, kernel):
     Parameters:
         prices (list or numpy.ndarray): array of price values to calculate the WMA for.
         n (int): The window size for the WMA calculation.
-        kernel (numpy.ndarray): the filter to use for the WMA calculation.
+        filter (numpy.ndarray): the filter to use for the WMA calculation.
     Returns:
         numpy.ndarray: The Weighted Moving Average of the input prices.
     Note:
         - The `pad` function is assumed to handle the padding of the input prices.
     """
-
-    padded = pad(prices, n)
-    return np.convolve(padded, kernel, mode='valid')
+    padded = pad(prices, window)
+    return np.convolve(padded, filter, mode='valid')

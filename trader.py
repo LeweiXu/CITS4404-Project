@@ -1,6 +1,6 @@
-#Shouldn't need to edit this, but do check if it is correct
+# AKA the fitness evaluation function 
 
-def simulate_trades(prices, signals, fee=0.03, initial_cash=1000, signal_threshold=0.5):
+def simulate_trades(prices, signals, fee=0.03, initial_cash=1000):
     """
     Simulates a trading strategy based on price data and trading signals.
     Args:
@@ -19,10 +19,11 @@ def simulate_trades(prices, signals, fee=0.03, initial_cash=1000, signal_thresho
     cash = initial_cash
     btc = 0
     for price, signal in zip(prices, signals):
-        if signal > signal_threshold and cash > 0: # Buy signal
+        # Will only buy/sell if cash/btc is available (> 0)
+        if signal == 1 and cash > 0: # Buy signal
             btc = (cash * (1 - fee)) / price
             cash = 0
-        elif signal < -signal_threshold and btc > 0: # Sell signal
+        elif signal == -1 and btc > 0: # Sell signal
             cash = btc * price * (1 - fee)
             btc = 0
     if btc > 0:

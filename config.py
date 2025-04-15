@@ -1,1 +1,3 @@
-DATASET_PATH = "data/BTC-Daily-2014-2019.csv"
+TRAINING_DATASET_PATH = "data/BTC-Daily-2014-2019.csv"
+DATASET_2020_PATH = "data/BTC-Daily-2020.csv"
+DATASET_2021_PATH = "data/BTC-Daily-2021.csv"
