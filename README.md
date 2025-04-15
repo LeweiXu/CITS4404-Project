@@ -1,2 +1,5 @@
 # CITS4404-Project
-project
+
+## A Trading Bot Optimization Algorithm
+
+Dataset: https://www.kaggle.com/datasets/prasoonkottarathil/btcinusd
