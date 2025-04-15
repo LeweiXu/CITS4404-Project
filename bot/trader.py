@@ -1,4 +1,21 @@
+#Shouldn't need to edit this, but do check if it is correct
+
 def simulate_trades(prices, signals, fee=0.03, initial_cash=1000, signal_threshold=0.5):
+    """
+    Simulates a trading strategy based on price data and trading signals.
+    Args:
+        prices (list of float): A list of prices for the asset being traded.
+        signals (list of float): A list of trading signals corresponding to the prices.
+                                 Positive values indicate buy signals, and negative values indicate sell signals.
+        signal_threshold (float, optional): The threshold for signals to trigger a buy or sell action.
+                                            Default is 0.5.
+    Returns:
+        float: The final amount of cash after all trades have been executed.
+    Notes:
+        - If there is any remaining asset at the end of the simulation, it is converted back to cash using the last price.
+        - Transaction fees are applied to both buy and sell operations.
+        - Do not change fee & initial_cash parameters (these are project requirements).
+    """
     cash = initial_cash
     btc = 0
     for price, signal in zip(prices, signals):

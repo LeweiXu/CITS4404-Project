@@ -15,8 +15,7 @@ def test_trading_bot(file_path):
     Returns:
         float: Final cash after simulating trades.
     """
-    # Load the data
-    data = read_csv(file_path, columns=['date', 'close'])
+    data = read_csv(file_path, columns=['date', 'close'], range=700)
     prices = data['close'].values
 
     # Calculate 10-day and 40-day SMA (with padding)
