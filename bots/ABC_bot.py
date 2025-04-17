@@ -23,7 +23,7 @@ def abc_optimizer(num_bees=20, max_iterations=50):
     data = read_csv("data/BTC-Daily-2014-2019.csv", start_date="2015-01-01", end_date="2025-12-31")  # Choose your training dataset
 
     # Initialize the bee population
-    population = [
+    population = 
         {
             "p1": np.random.randint(*p1_range),
             "p2": np.random.randint(*p2_range),
