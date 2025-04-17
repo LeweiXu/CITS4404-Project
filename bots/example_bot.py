@@ -1,6 +1,6 @@
 import numpy as np
 from utils.data_loader import read_csv
-from trader import simulate_trades
+from utils.trader import simulate_trades
 from filters.wma import wma, sma_filter
 
 # Each trading bot should have 2 functions: the optimization function and the generate_signals function
