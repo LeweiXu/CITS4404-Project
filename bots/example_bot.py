@@ -24,8 +24,20 @@ class example_bot:
         signals = np.diff(signal, prepend=0)
         return signals
     
+    def bounds(self):
+        """
+        Returns the bounds for the parameters of the bot.
+        """
+        return {
+            "p1": (1, 100),
+            "p2": (1, 100)
+        }
+
 bot_instance = example_bot(
-    data=read_csv("data/BTC-Daily-2014-2019.csv", start_date="2015-01-01", end_date="2025-12-31"),
+    data=read_csv("data/2020_hourly.csv"),
     p1=0,
     p2=0
 )
+
+def example_optimizer(bot):
+    # optimiser p1 and p2
