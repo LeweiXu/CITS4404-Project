@@ -50,6 +50,7 @@
         - To do this, set hyperparameters to default value of `None`.
         - `leaderboard.py` calls the `generate_signals()` function with no hyperparamaters provided so that it can be tested against the 2020 and 2021 datasets.
     - This function may vary from bot to bot, e.g. one bot may use an ema filter comined with an lma filter, whilst another bot may use the filter as a hyperparameter itself.
+    - Optionally it can also use a `granularity` argument which specifies which type of granularity the data is (daily, hourly, minutes) so that the behaviour can possibly vary depending on what type of dataset is used.
     - Regardles of how complex or exotic the bot is, the final goal of any bot is to generate buy/sell signals.
 
     4. **Optimization Function**:

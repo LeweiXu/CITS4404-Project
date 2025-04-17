@@ -4,7 +4,7 @@ from utils.data_loader import read_csv
 from config import *
 from utils.trader import simulate_trades
 
-def test_bots(dataset_path, granularity):
+def test_bots(dataset_path):
     """
     Tests all optimization algorithms in the 'optimisers' folder against the given dataset.
 
@@ -29,7 +29,7 @@ def test_bots(dataset_path, granularity):
                 # Check if the module has a 'generate_signals' function
                 if hasattr(module, 'generate_signals'):
                     print(f"Testing {optimiser_name}...")
-                    signals = module.generate_signals(data, granularity)
+                    signals = module.generate_signals(data)
                     results[optimiser_name] = simulate_trades(data['close'].values, signals)
                 else:
                     print(f"Skipping {optimiser_name}: 'generate_signals' function not found.")
@@ -45,32 +45,41 @@ if __name__ == "__main__":
     dataset_2021_daily = DATASET_2021_DAILY_PATH
     dataset_2020_hourly = DATASET_2020_HOURLY_PATH
     dataset_2021_hourly = DATASET_2021_HOURLY_PATH
+    dataset_2020_minute = DATASET_2020_MINUTE_PATH
+    dataset_2021_minute = DATASET_2021_MINUTE_PATH
 
     print("Testing against the 2020 daily dataset...")
-    results_2020_daily = test_bots(dataset_2020_daily, 'daily')
+    results_2020_daily = test_bots(dataset_2020_daily)
     print("\nTesting against the 2021 daily dataset...")
-    results_2021_daily = test_bots(dataset_2021_daily, 'daily')
+    results_2021_daily = test_bots(dataset_2021_daily)
 
     print("\nTesting against the 2020 hourly dataset...")
-    results_2020_hourly = test_bots(dataset_2020_hourly, 'hourly')
+    results_2020_hourly = test_bots(dataset_2020_hourly)
     print("\nTesting against the 2021 hourly dataset...")
-    results_2021_hourly = test_bots(dataset_2021_hourly, 'hourly')
+    results_2021_hourly = test_bots(dataset_2021_hourly)
+
+    print("\nTesting against the 2020 minute dataset...")
+    results_2020_minute = test_bots(dataset_2020_minute)
+    print("\nTesting against the 2021 minute dataset...")
+    results_2021_minute = test_bots(dataset_2021_minute)
 
     print("\nAll trading bots start with $1000 cash and all transactions incur a 3% fee")
     print("Each bot begins trading on the first day of the year and the balance after 365 days of trading is the score")
     # Combine results into a leaderboard format
     print("Leaderboard:")
-    print(f"{'Rank':<5} {'Bot':<20} {'2020 Daily ($)':<15} {'2021 Daily ($)':<15} {'2020 Hourly ($)':<15} {'2021 Hourly ($)':<15} {'Average ($)':<15}")
-    print("-" * 100)
+    print(f"{'Rank':<5} {'Bot':<20} {'2020 Daily ($)':<15} {'2021 Daily ($)':<15} {'2020 Hourly ($)':<15} {'2021 Hourly ($)':<15} {'2020 Minute ($)':<15} {'2021 Minute ($)':<15} {'Average ($)':<15}")
+    print("-" * 120)
 
     # Create a combined list of bots from all datasets
     all_bots = set(results_2020_daily.keys()).union(
         results_2021_daily.keys(),
         results_2020_hourly.keys(),
-        results_2021_hourly.keys()
+        results_2021_hourly.keys(),
+        results_2020_minute.keys(),
+        results_2021_minute.keys()
     )
 
-    # Sort bots by the average of the 4 results
+    # Sort bots by the average of the 6 results
     sorted_bots = sorted(
         all_bots,
         key=lambda bot: (
@@ -78,8 +87,10 @@ if __name__ == "__main__":
                 results_2020_daily.get(bot, 0) +
                 results_2021_daily.get(bot, 0) +
                 results_2020_hourly.get(bot, 0) +
-                results_2021_hourly.get(bot, 0)
-            ) / 4
+                results_2021_hourly.get(bot, 0) +
+                results_2020_minute.get(bot, 0) +
+                results_2021_minute.get(bot, 0)
+            ) / 6
         ),
         reverse=True
     )
@@ -89,10 +100,14 @@ if __name__ == "__main__":
         cash_2021_daily = results_2021_daily.get(bot, 0)
         cash_2020_hourly = results_2020_hourly.get(bot, 0)
         cash_2021_hourly = results_2021_hourly.get(bot, 0)
+        cash_2020_minute = results_2020_minute.get(bot, 0)
+        cash_2021_minute = results_2021_minute.get(bot, 0)
         average = (
             cash_2020_daily +
             cash_2021_daily +
             cash_2020_hourly +
-            cash_2021_hourly
-        ) / 4
-        print(f"{rank:<5} {bot:<20} {cash_2020_daily:<15.2f} {cash_2021_daily:<15.2f} {cash_2020_hourly:<15.2f} {cash_2021_hourly:<15.2f} {average:<15.2f}")
+            cash_2021_hourly +
+            cash_2020_minute +
+            cash_2021_minute
+        ) / 6
+        print(f"{rank:<5} {bot:<20} {cash_2020_daily:<15.2f} {cash_2021_daily:<15.2f} {cash_2020_hourly:<15.2f} {cash_2021_hourly:<15.2f} {cash_2020_minute:<15.2f} {cash_2021_minute:<15.2f} {average:<15.2f}")

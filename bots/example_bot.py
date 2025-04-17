@@ -23,7 +23,7 @@ def example_optimizer():
         p1 += 1
         p2 += 1
 
-        signals = generate_signals(data, p1, p2)
+        signals = generate_signals(data, "daily", p1, p2)
         final_cash = simulate_trades(data['close'].values, signals)
 
         if final_cash > best_cash:
@@ -33,7 +33,7 @@ def example_optimizer():
     return best_p1, best_p2
 
 # This function must be able to take a dataframe of any length and return a signals of the same length
-def generate_signals(data, p1=None, p2=None):
+def generate_signals(data, granularity, p1=None, p2=None):
     """
     Generates trading signals based on the given hyperparameters.
 
