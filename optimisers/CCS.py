@@ -1,4 +1,4 @@
-def cyclic_coordinate_search(bot_instance, data, max_iterations=100, step_size=0.1):
+def cyclic_coordinate_search(bot_instance, data, max_iterations=100):
     """
     Optimizes the hyperparameters of a bot instance using Cyclic Coordinate Search.
 
@@ -6,33 +6,54 @@ def cyclic_coordinate_search(bot_instance, data, max_iterations=100, step_size=0
         bot_instance (bot): An instance of the bot class.
         data (pd.DataFrame): The dataset containing price data.
         max_iterations (int): The maximum number of iterations for optimization.
-        step_size (float): The step size for adjusting each parameter.
 
     Returns:
-        tuple: The best hyperparameters and the corresponding total return.
+        list: The best hyperparameters found during optimization.
     """
     # Initialize hyperparameters at the midpoint of their bounds
-    hyperparams = [(low + high) / 2 for low, high in bot_instance.bounds]
-    best_return = bot_instance.total_return(hyperparams, data)
+    hyperparams = []
+    for bound in bot_instance.bounds:
+        if isinstance(bound, tuple):  # Continuous parameter
+            hyperparams.append((bound[0] + bound[1]) / 2)
+        elif isinstance(bound, list):  # Discrete parameter
+            hyperparams.append(bound[len(bound) // 2])  # Midpoint of the list
+
+    # Evaluate the initial fitness
+    best_fitness = bot_instance.fitness(hyperparams, data)
 
     for iteration in range(max_iterations):
-        for i in range(bot_instance.n):  # Cycle through each parameter
+        for i in range(len(bot_instance.bounds)):  # Cycle through each parameter
             # Try increasing the parameter
             new_hyperparams = hyperparams[:]
-            new_hyperparams[i] = min(new_hyperparams[i] + step_size, bot_instance.bounds[i][1])
-            new_return = bot_instance.total_return(new_hyperparams, data)
+            if isinstance(bot_instance.bounds[i], tuple):  # Continuous parameter
+                step_size = (bot_instance.bounds[i][1] - bot_instance.bounds[i][0]) * 0.1
+                new_hyperparams[i] = min(new_hyperparams[i] + step_size, bot_instance.bounds[i][1])
+            elif isinstance(bot_instance.bounds[i], list):  # Discrete parameter
+                current_index = bot_instance.bounds[i].index(hyperparams[i])
+                if current_index < len(bot_instance.bounds[i]) - 1:
+                    new_hyperparams[i] = bot_instance.bounds[i][current_index + 1]
 
-            if new_return > best_return:
+            # Evaluate the fitness of the new parameters
+            new_fitness = bot_instance.fitness(new_hyperparams, data)
+            if new_fitness > best_fitness:
                 hyperparams = new_hyperparams
-                best_return = new_return
-                continue  # Skip decreasing if increasing improves the return
+                best_fitness = new_fitness
+                continue  # Skip decreasing if increasing improves the fitness
 
             # Try decreasing the parameter
-            new_hyperparams[i] = max(hyperparams[i] - step_size, bot_instance.bounds[i][0])
-            new_return = bot_instance.total_return(new_hyperparams, data)
+            new_hyperparams = hyperparams[:]
+            if isinstance(bot_instance.bounds[i], tuple):  # Continuous parameter
+                step_size = (bot_instance.bounds[i][1] - bot_instance.bounds[i][0]) * 0.1
+                new_hyperparams[i] = max(new_hyperparams[i] - step_size, bot_instance.bounds[i][0])
+            elif isinstance(bot_instance.bounds[i], list):  # Discrete parameter
+                current_index = bot_instance.bounds[i].index(hyperparams[i])
+                if current_index > 0:
+                    new_hyperparams[i] = bot_instance.bounds[i][current_index - 1]
 
-            if new_return > best_return:
+            # Evaluate the fitness of the new parameters
+            new_fitness = bot_instance.fitness(new_hyperparams, data)
+            if new_fitness > best_fitness:
                 hyperparams = new_hyperparams
-                best_return = new_return
+                best_fitness = new_fitness
 
     return hyperparams
