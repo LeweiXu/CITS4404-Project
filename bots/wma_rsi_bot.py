@@ -31,7 +31,9 @@ def rsi(prices, period=14):
 
 import numpy as np
 from filters.wma import wma, sma_filter
-# from utils.rsi import rsi
+from config import TRAINING_DATASET_PATH
+from optimisers.pso_optimiser import pso_optimiser
+from utils.data_loader import read_csv
 from bots.bot_base import bot
 
 
@@ -84,3 +86,8 @@ class wma_rsi_bot(bot):
                 signals.append(0)
 
         return np.array(signals)
+
+wma_rsi_bot_instance = wma_rsi_bot()
+
+training_data = read_csv(TRAINING_DATASET_PATH, start_date="2015-01-01", end_date="2015-12-31")
+pso_optimiser(wma_rsi_bot_instance, training_data)

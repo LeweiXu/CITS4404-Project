@@ -14,7 +14,7 @@ def plot(data, signals):
     plt.ylabel('Closing Price')
     plt.legend()
     plt.grid(alpha=0.3)
-    plt.savefig("signals_plot.png")
+    plt.savefig("plots/signals_plot.png")
     print("Plot saved as 'signals_plot.png'")
 
     # Plot 2: Bar plot for buy and sell signals
@@ -27,5 +27,5 @@ def plot(data, signals):
     plt.xlabel('Time (Index)')
     plt.ylabel('Closing Price')
     plt.grid(alpha=0.3)
-    plt.savefig("signals_bar_plot.png")
+    plt.savefig("plots/signals_bar_plot.png")
     print("Bar plot saved as 'signals_bar_plot.png'")

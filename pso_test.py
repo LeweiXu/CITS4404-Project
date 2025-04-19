@@ -1,6 +1,5 @@
 from utils.data_loader import read_csv
-from bots.simple_bot import simple_bot
-from bots.pso_bot import wma_rsi_bot
+from bots.wma_rsi_bot import wma_rsi_bot
 from optimisers.pso_optimiser import pso_optimiser
 from config import TRAINING_DATASET_PATH, DATASET_2020_DAILY_PATH
 from utils.plots import plot
