@@ -2,6 +2,7 @@ import os
 import importlib
 from utils.data_loader import read_csv
 from config import *
+from utils.plots import plot
 
 # Dynamically import all bots from the bots/ folder
 def import_bots():
@@ -39,6 +40,7 @@ def test_bots(dataset_path):
         try:
             print(f"Testing {bot_name}...")
             signals = bot_instance.generate_signals(data)
+            plot(data, signals, plot_name=f"{bot_name}_{dataset_path.split('/')[-1].split('.')[0]}")
             results[bot_name] = bot_instance.fitness(data)
         except Exception as e:
             print(f"Error testing {bot_name}: {e}")
