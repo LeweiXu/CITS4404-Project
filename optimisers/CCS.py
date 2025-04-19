@@ -1,4 +1,4 @@
-def cyclic_coordinate_search(bot_instance, data, max_iterations=100):
+def CCS(bot_instance, data, max_iterations=100):
     """
     Optimizes the hyperparameters of a bot instance using Cyclic Coordinate Search.
 

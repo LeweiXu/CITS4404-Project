@@ -2,39 +2,46 @@ import os
 import importlib
 from utils.data_loader import read_csv
 from config import *
-from utils.trader import simulate_trades
 
-def test_bots(dataset_path, granularity):
+# Dynamically import all bots from the bots/ folder
+def import_bots():
+    bots_path = os.path.join(os.path.dirname(__file__), 'bots')
+    bots = {}
+    for file in os.listdir(bots_path):
+        if file.endswith('.py') and file != '__init__.py':
+            bot_name = file[:-3]  # Remove the '.py' extension
+            try:
+                # Import the bot module
+                module = importlib.import_module(f'bots.{bot_name}')
+                # Check if the module has an instance of a bot
+                if hasattr(module, f'{bot_name}_instance'):
+                    bots[bot_name] = getattr(module, f'{bot_name}_instance')
+            except Exception as e:
+                print(f"Error importing {bot_name}: {e}")
+    return bots
+
+def test_bots(dataset_path):
     """
-    Tests all optimization algorithms in the 'optimisers' folder against the given dataset.
+    Tests all bots against the given dataset.
 
     Parameters:
         dataset_path (str): Path to the dataset file.
+        granularity (str): The granularity of the dataset (e.g., 'daily', 'hourly').
 
     Returns:
-        dict: A dictionary with optimiser names as keys and their final cash values as values.
+        dict: A dictionary with bot names as keys and their final cash values as values.
     """
     results = {}
-    optimisers_path = os.path.join(os.path.dirname(__file__), 'bots')
+    bots = import_bots()  # Import all bots
     data = read_csv(dataset_path)
 
-    # Iterate through all Python files in the 'bots' folder
-    for file in os.listdir(optimisers_path):
-        if file.endswith('.py') and file != '__init__.py':
-            optimiser_name = file[:-3]  # Remove the '.py' extension
-            try:
-                # Dynamically import the optimiser module
-                module = importlib.import_module(f'bots.{optimiser_name}')
-                
-                # Check if the module has a 'generate_signals' function
-                if hasattr(module, 'generate_signals'):
-                    print(f"Testing {optimiser_name}...")
-                    signals = module.generate_signals(data, granularity)
-                    results[optimiser_name] = simulate_trades(data['close'].values, signals)
-                else:
-                    print(f"Skipping {optimiser_name}: 'generate_signals' function not found.")
-            except Exception as e:
-                print(f"Error testing {optimiser_name}: {e}")
+    for bot_name, bot_instance in bots.items():
+        try:
+            print(f"Testing {bot_name}...")
+            signals = bot_instance.generate_signals(data)
+            results[bot_name] = bot_instance.fitness(data)
+        except Exception as e:
+            print(f"Error testing {bot_name}: {e}")
 
     sorted_results = dict(sorted(results.items(), key=lambda item: item[1], reverse=True))
     return sorted_results
@@ -47,14 +54,14 @@ if __name__ == "__main__":
     dataset_2021_hourly = DATASET_2021_HOURLY_PATH
 
     print("Testing against the 2020 daily dataset...")
-    results_2020_daily = test_bots(dataset_2020_daily, 'daily')
+    results_2020_daily = test_bots(dataset_2020_daily)
     print("\nTesting against the 2021 daily dataset...")
-    results_2021_daily = test_bots(dataset_2021_daily, 'daily')
+    results_2021_daily = test_bots(dataset_2021_daily)
 
     print("\nTesting against the 2020 hourly dataset...")
-    results_2020_hourly = test_bots(dataset_2020_hourly, 'hourly')
+    results_2020_hourly = test_bots(dataset_2020_hourly)
     print("\nTesting against the 2021 hourly dataset...")
-    results_2021_hourly = test_bots(dataset_2021_hourly, 'hourly')
+    results_2021_hourly = test_bots(dataset_2021_hourly)
 
     print("\nAll trading bots start with $1000 cash and all transactions incur a 3% fee")
     print("Each bot begins trading on the first day of the year and the balance after 365 days of trading is the score")

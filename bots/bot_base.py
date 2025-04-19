@@ -1,12 +1,9 @@
 class bot:
-    def __init__(self, signals_function, bounds):
-        self.signals_function = signals_function
-        self.bounds = bounds
-        self.params = None
-        self.data = None
+    def __init__(self):
+        pass
 
-    def fitness(self, hyperparams, data, fee=0.03, initial_cash=1000):
-        signals = self.signals_function(hyperparams, data)
+    def fitness(self, data, fee=0.03, initial_cash=1000):
+        signals = self.generate_signals(data)
         prices = data['close'].values
         cash = initial_cash
         btc = 0
