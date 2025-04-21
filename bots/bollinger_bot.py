@@ -3,7 +3,7 @@ import pandas as pd
 from bots.bot_base import bot
 from utils.data_loader import read_csv
 from config import TRAINING_DATASET_PATH
-from optimisers.grid_search_optimiser import grid_search_optimiser
+from optimisers.aco_optimiser import aco_optimiser
 
 
 class bollinger_bot(bot):
@@ -59,4 +59,4 @@ bollinger_bot_instance = bollinger_bot()
 training_data = read_csv(
     TRAINING_DATASET_PATH, start_date="2015-01-01", end_date="2015-12-31"
 )
-grid_search_optimiser(bollinger_bot_instance, training_data)
+aco_optimiser(bollinger_bot_instance, training_data)
