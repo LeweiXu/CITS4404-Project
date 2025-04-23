@@ -1,10 +1,12 @@
 # bots/daily_ma_bot.py
 import numpy as np
-from bots.bot_base import BotBase        # adjust import if path differs
+from bots.bot_base import bot       # adjust import if path differs
 from filters.wma import sma_filter, wma  # simple‑moving‑average helper
 from utils.data_loader import read_csv
+from config import TRAINING_DATASET_PATH
+from optimisers.grid_search_optimiser import grid_search_optimiser
 
-class DailyMABot(BotBase):
+class DailyMABot(bot):
     # --- define parameter bounds for optimiser ------------
     #           (lower , upper , is_int?)
     param_bounds = {
@@ -33,3 +35,7 @@ class DailyMABot(BotBase):
 def generate_signals(data, **hyper):
     bot = DailyMABot(**hyper)          # hyper = {} when leaderboard calls it
     return bot.generate_signals(data)
+
+daily_ma_bot_instance = DailyMABot()
+data = read_csv(TRAINING_DATASET_PATH, start_date="2015-01-01", end_date="2019-12-31")
+grid_search_optimiser(daily_ma_bot_instance, data)

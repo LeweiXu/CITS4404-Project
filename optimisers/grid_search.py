@@ -15,6 +15,3 @@ def optimise_daily_ma():
     print("Best params", best_p, "->", best_f)
     bot.best_params = best_p   # cache for leaderboard
     return bot
-
-if __name__ == "__main__":
-    optimise_daily_ma()
