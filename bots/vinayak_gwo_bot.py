@@ -1,5 +1,5 @@
-from bot_base import Bot        # adjust import if different
-from filters.wma import sma, ema, lma   # the helper filters
+from .bot_base import bot as Bot      # adjust import if different
+from filters.wma import sma_filter , ema_filter , lma_filter   # the helper filters
 import numpy as np
 
 class VinayakGWOBot(Bot):
@@ -8,7 +8,7 @@ class VinayakGWOBot(Bot):
     param_bounds = [(3, 25), (30, 120)]   # can tweak later
 
     def __init__(self):
-        super().__init__("vinayak_gwo_bot")   # name shown in leaderboard
+        super().__init__   # name shown in leaderboard
 
     # main logic: given df + current params, spit out signals
     def generate_signals(self, data, params=None):
