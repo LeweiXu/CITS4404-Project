@@ -1,6 +1,9 @@
 import numpy as np
 from bots.bot_base import bot
 from filters.wma import sma_filter, wma
+from utils.data_loader import read_csv
+from config import TRAINING_DATASET_PATH
+from optimisers.gwo_optimiser import gwo_optimiser
 
 class gwo_bot(bot):
     """
@@ -16,7 +19,6 @@ class gwo_bot(bot):
       7. rebuy_delay    : Minimum bars between successive buys
     """
     def __init__(self):
-        super().__init__()
         self.hyperparams = []
         # Define bounds for each hyperparameter
         self.bounds = [
@@ -73,14 +75,6 @@ class gwo_bot(bot):
 
         return signals
 
-# Example instantiation:
-# gwo_bot_instance = gwo_bot()
-# training_data = read_csv(TRAINING_DATASET_PATH, start_date="2015-01-01", end_date="2019-12-31")
-# grid_search_optimiser(gwo_bot_instance, training_data)
-
-
-from optimisers.gwo_optimiser import gwo_optimiser
-
 gwo_bot_instance = gwo_bot()
 training_data = read_csv(TRAINING_DATASET_PATH, start_date="2015-01-01", end_date="2019-12-31")
 best_value = gwo_optimiser(gwo_bot_instance, training_data,
@@ -88,4 +82,3 @@ best_value = gwo_optimiser(gwo_bot_instance, training_data,
                            max_iter=100)    # iterations
 print("Best fitness:", best_value)
 print("Best hyperparameters:", gwo_bot_instance.hyperparams)
-
