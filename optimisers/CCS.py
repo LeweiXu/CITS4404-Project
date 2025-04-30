@@ -1,4 +1,4 @@
-def CCS(bot_instance, data, max_iterations=100):
+def CCS(bot_instance, data, max_iterations=100, fit_history=False):
     """
     Optimizes the hyperparameters of a bot instance using Cyclic Coordinate Search.
 
@@ -20,7 +20,7 @@ def CCS(bot_instance, data, max_iterations=100):
 
     # Evaluate the initial fitness
     best_fitness = bot_instance.fitness(hyperparams, data)
-
+    BestList = []
     for iteration in range(max_iterations):
         for i in range(len(bot_instance.bounds)):  # Cycle through each parameter
             # Try increasing the parameter
@@ -55,5 +55,9 @@ def CCS(bot_instance, data, max_iterations=100):
             if new_fitness > best_fitness:
                 hyperparams = new_hyperparams
                 best_fitness = new_fitness
-
-    return hyperparams
+        BestList.append(best_fitness)
+    
+    if fit_history:
+        return BestList
+    else:
+        return hyperparams
