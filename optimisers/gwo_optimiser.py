@@ -1,6 +1,6 @@
 import numpy as np
 
-def gwo_optimiser(bot, data, num_wolves=20, max_iter=50):
+def gwo_optimiser(bot, data, num_wolves=20, max_iter=50, fit_history=False):
     """
     Grey Wolf Optimizer for bot hyperparameters.
     bot: an instance with .bounds (list of value-lists), .fitness(data), and .hyperparams
@@ -22,6 +22,7 @@ def gwo_optimiser(bot, data, num_wolves=20, max_iter=50):
     delta_pos, delta_score = None, -np.inf
 
     # Main loop
+    BestList = []
     for t in range(max_iter):
         a = 2 * (1 - t / (max_iter - 1))  # a decreases linearly from 2 to 0
 
@@ -48,6 +49,8 @@ def gwo_optimiser(bot, data, num_wolves=20, max_iter=50):
                 beta_score, beta_pos = fit, positions[i].copy()
             elif fit > delta_score:
                 delta_score, delta_pos = fit, positions[i].copy()
+        BestList.append(alpha_score)
+
 
         # 2) Update each wolf’s position
         for i in range(num_wolves):
@@ -88,4 +91,7 @@ def gwo_optimiser(bot, data, num_wolves=20, max_iter=50):
         best.append(val)
     bot.hyperparams = best
 
-    return alpha_score
+    if fit_history:
+        return BestList
+    else:
+        return alpha_score
