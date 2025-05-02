@@ -1,6 +1,7 @@
 from utils.data_loader import read_csv
 from bots.wma_rsi_bot import wma_rsi_bot
 from optimisers.pso_optimiser import pso_optimiser
+
 from config import TRAINING_DATASET_PATH, DATASET_2020_DAILY_PATH
 from utils.plots import plot
 
@@ -10,7 +11,7 @@ wma_rsi_bot_instance = wma_rsi_bot()
 
 training_data = read_csv(TRAINING_DATASET_PATH, start_date="2015-01-01", end_date="2015-12-31")
 pso_optimiser(wma_rsi_bot_instance, training_data)
-plot(training_data, wma_rsi_bot_instance.generate_signals(training_data))
+plot(training_data, wma_rsi_bot_instance.generate_signals(training_data),"pso_test")
 print(wma_rsi_bot_instance.hyperparams)
 print(wma_rsi_bot_instance.fitness(training_data))
 

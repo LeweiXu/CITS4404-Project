@@ -33,6 +33,7 @@ import numpy as np
 from filters.wma import wma, sma_filter
 from config import TRAINING_DATASET_PATH
 from optimisers.pso_optimiser import pso_optimiser
+#from optimisers.pso_optimiser_without_external_library import pso_optimiser
 from utils.data_loader import read_csv
 from bots.bot_base import bot
 
@@ -55,6 +56,7 @@ class wma_rsi_bot(bot):
         ]
 
     def generate_signals(self, data):
+        #print("Training...")
         prices = data['close'].values
         p1, p2, rsi_period, rsi_buy_th, rsi_sell_th = map(int, self.hyperparams)
 
