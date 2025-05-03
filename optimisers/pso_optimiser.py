@@ -92,7 +92,7 @@ def enhanced_pso(fitness_func, lb, ub, swarmsize=30, maxiter=50,
     }
 
 
-def pso_optimiser(bot_instance, data, swarmsize=30, maxiter=50):
+def pso_optimiser(bot_instance, data, swarmsize=30, maxiter=50, fit_history=False):
     """
     General PSO optimizer that supports any number of parameters.
     """
@@ -113,6 +113,7 @@ def pso_optimiser(bot_instance, data, swarmsize=30, maxiter=50):
     result = enhanced_pso(pso_fitness, lb, ub, swarmsize=swarmsize, maxiter=maxiter)
     best_params = result['best_position']
     best_fitness = result['best_fitness']
+    bestList = result['convergence_history']
     # Save the best parameters back to the bot instance
     bot_instance.hyperparams = best_params
 
@@ -120,5 +121,8 @@ def pso_optimiser(bot_instance, data, swarmsize=30, maxiter=50):
     print(f"[PSO] Best Params: {best_params}")
     print(f"[PSO] Final Cash: {-best_fitness:.2f}")  # Fitness is negated cash, so we convert back to positive
 
-    return best_params
+    if fit_history:
+        return bestList
+    else:
+        return best_params
 
