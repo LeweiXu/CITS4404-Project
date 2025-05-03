@@ -9,7 +9,7 @@ from utils.plots import plot
 class zero_cross_bot(bot):
     def __init__(self, data):
         self.hyperparams = []
-        upper_bound = self.find_upper_bounds(data)
+        upper_bound = 365
         self.bounds = [[i for i in range(1, upper_bound)], [i for i in range(1, upper_bound)]]
 
     def generate_signals(self, data):

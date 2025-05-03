@@ -3,7 +3,7 @@ from bots.bot_base import bot
 from filters.macd import macd
 from utils.data_loader import read_csv
 from config import TRAINING_DATASET_PATH
-from optimisers.grid_search_optimiser import grid_search_optimiser
+from pantry.grid_search_optimiser import grid_search_optimiser
 from utils.plots import plot_macd_with_signals
 
 class macd_bot(bot):

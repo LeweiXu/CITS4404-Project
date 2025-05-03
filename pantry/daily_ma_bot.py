@@ -4,7 +4,7 @@ from bots.bot_base import bot       # adjust import if path differs
 from filters.wma import sma_filter, wma  # simple‑moving‑average helper
 from utils.data_loader import read_csv
 from config import TRAINING_DATASET_PATH
-from optimisers.grid_search_optimiser import grid_search_optimiser
+from pantry.grid_search_optimiser import grid_search_optimiser
 
 class DailyMABot(bot):
     # --- define parameter bounds for optimiser ------------
