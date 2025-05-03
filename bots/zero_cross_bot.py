@@ -7,7 +7,7 @@ from optimisers.bf_optimiser import bf_optimiser
 from utils.plots import plot
 
 class zero_cross_bot(bot):
-    def __init__(self, data):
+    def __init__(self):
         self.hyperparams = []
         upper_bound = 365
         self.bounds = [[i for i in range(1, upper_bound)], [i for i in range(1, upper_bound)]]
