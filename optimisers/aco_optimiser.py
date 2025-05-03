@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def aco_optimiser(bot_instance, data, ants=20, iterations=30, rho=0.1):
+def aco_optimiser(bot_instance, data, ants=20, iterations=30, rho=0.1, fit_history=False):
     """
     Use Ant Colony Optimization (ACO) to optimize the hyperparameters of bot_instance.
     Parameters:
@@ -23,6 +23,7 @@ def aco_optimiser(bot_instance, data, ants=20, iterations=30, rho=0.1):
     best_params = None
     best_score = -np.inf
 
+    bestList = []
     for _ in range(iterations):  # Removed trange -> regular range
         all_solutions = []
         all_scores = []
@@ -50,8 +51,11 @@ def aco_optimiser(bot_instance, data, ants=20, iterations=30, rho=0.1):
         for i, val in enumerate(all_solutions[idx_best]):
             j = grid[i].index(val)
             pheromones[i][j] += all_scores[idx_best] / best_score
-
+        bestList.append(best_score)
     # 3. Assign best params
     bot_instance.hyperparams = best_params
     print(f"[ACO] Best params: {best_params}, best cash: {best_score:.2f}")
-    return best_params
+    if fit_history:
+        return bestList
+    else:
+        return best_params

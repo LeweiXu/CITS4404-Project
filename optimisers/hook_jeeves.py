@@ -1,7 +1,7 @@
 import numpy as np
 
 # Hook Jeeves optimization method
-def hook_jeeves(bot_instance, data, max_iterations=100, step_size=1, reduction_factor=0.5):
+def hook_jeeves(bot_instance, data, max_iterations=100, step_size=1, reduction_factor=0.5, fit_history=False):
     """
     Perform Hook Jeeves optimization to tune the hyperparameters of the bot.
 
@@ -22,7 +22,7 @@ def hook_jeeves(bot_instance, data, max_iterations=100, step_size=1, reduction_f
             hyperparams.append(float(np.random.choice(discretized_bounds)))
     bot_instance.hyperparams = hyperparams
     best_fitness = bot_instance.fitness(data)
-
+    bestList = []
     for iteration in range(max_iterations):
         improved = False
 
@@ -55,11 +55,15 @@ def hook_jeeves(bot_instance, data, max_iterations=100, step_size=1, reduction_f
         # If no improvement, reduce step size
         if not improved:
             step_size *= reduction_factor
-
+        
+        bestList.append(best_fitness)
         # Terminate if step size is too small
         if step_size < 1e-6:
             break
 
     # Set the bot's hyperparameters to the best found
     bot_instance.hyperparams = hyperparams
-    return (hyperparams, best_fitness)
+    if fit_history:
+        return bestList
+    else:
+        return (hyperparams, best_fitness)

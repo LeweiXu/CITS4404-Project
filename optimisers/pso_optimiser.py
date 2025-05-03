@@ -113,8 +113,9 @@ def pso_optimiser(bot_instance, data, swarmsize=30, maxiter=50, fit_history=Fals
     result = enhanced_pso(pso_fitness, lb, ub, swarmsize=swarmsize, maxiter=maxiter)
     best_params = result['best_position']
     best_fitness = result['best_fitness']
-    bestList = result['convergence_history']
-    # Save the best parameters back to the bot instance
+    bests = result['convergence_history']
+    bestList = [-score for score in bests]
+     # Save the best parameters back to the bot instance
     bot_instance.hyperparams = best_params
 
     # Print the results
