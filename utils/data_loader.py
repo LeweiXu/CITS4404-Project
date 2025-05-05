@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 def read_csv(file_path, columns=['date', 'close'], start_date=None, end_date=None):
     """
@@ -28,3 +29,15 @@ def read_csv(file_path, columns=['date', 'close'], start_date=None, end_date=Non
         raise ValueError(f"Error reading the file. Ensure the specified columns exist in the CSV. {e}")
     
     return df
+
+def generate_test_data():
+    """
+    Generate a 100-day test dataset with fluctuating BTC/USD prices.
+
+    Returns:
+        pd.DataFrame: A DataFrame with one column 'close' containing 100 points of test data.
+    """
+    np.random.seed(42)  # For reproducibility
+    prices = np.cumsum(np.random.randn(100) * 10 + 50000)  # Simulate price fluctuations around $50,000
+    dates = pd.date_range(start="2025-01-01", periods=100)
+    return pd.DataFrame({"date": dates, "close": prices})

@@ -3,8 +3,7 @@ from bots.bot_base import bot
 from filters.macd import macd
 from utils.data_loader import read_csv
 from config import TRAINING_DATASET_PATH
-from pantry.grid_search_optimiser import grid_search_optimiser
-from utils.plots import plot_macd_with_signals
+from optimisers.aco_optimiser import aco_optimiser
 
 class macd_bot(bot):
     """
@@ -21,9 +20,9 @@ class macd_bot(bot):
     def __init__(self):
         self.hyperparams = []
         self.bounds = [
-            list(range(5, 31)),
-            list(range(20, 61)), 
-            list(range(5, 21)), 
+            list(range(1, 200)),
+            list(range(1, 200)), 
+            list(range(1, 200)), 
         ]
 
     def generate_signals(self, data):
@@ -45,9 +44,10 @@ class macd_bot(bot):
         sell_signals = (macd_line[1:] < signal_line[1:]) & (macd_line[:-1] >= signal_line[:-1])
         signals[1:][sell_signals] = -1
 
-        # plot_macd_with_signals(data, macd_line, signal_line, signals, plot_name="macd_signals")
         return signals
 
 macd_bot_instance = macd_bot()
-training_data = read_csv(TRAINING_DATASET_PATH, start_date="2017-01-01", end_date="2018-12-31")
-grid_search_optimiser(macd_bot_instance, training_data)
+training_data = read_csv(TRAINING_DATASET_PATH, start_date="2015-01-01", end_date="2018-12-31")
+aco_optimiser(macd_bot_instance, training_data)
+# macd_bot_instance.hyperparams = [12, 26, 9] # 12-26-9 method popular with traders
+# macd_bot_instance.hyperparams = [125, 192, 140] # ACO optimised values
