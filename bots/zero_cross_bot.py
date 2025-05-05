@@ -32,5 +32,5 @@ class zero_cross_bot(bot):
         return final_signals
     
 training_data = read_csv(TRAINING_DATASET_PATH, start_date="2019-01-01", end_date="2019-12-31")
-zero_cross_bot_instance = zero_cross_bot(training_data)
+zero_cross_bot_instance = zero_cross_bot()
 bf_optimiser(zero_cross_bot_instance, training_data)

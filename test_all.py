@@ -1,7 +1,11 @@
 import os
 import importlib
+import numpy as np
 from utils.data_loader import read_csv
 from config import *
+import matplotlib.pyplot as plt
+
+np.random.seed(4404)
 
 def import_classes(folder, base_package):
     """
@@ -25,6 +29,72 @@ def import_classes(folder, base_package):
             except Exception as e:
                 print(f"Error importing {class_name}: {e}")
     return classes
+
+def save_ranking_graph(data, title, xlabel, ylabel, output_file):
+    """
+    Save a ranking bar chart to the plots/ folder.
+
+    Parameters:
+        data (dict): A dictionary with names as keys and scores as values.
+        title (str): Title of the plot.
+        xlabel (str): Label for the x-axis.
+        ylabel (str): Label for the y-axis.
+        output_file (str): Path to save the plot.
+    """
+    names = list(data.keys())
+    scores = list(data.values())
+
+    plt.figure(figsize=(10, 6))
+    plt.barh(names, scores, color='skyblue')
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.title(title)
+    plt.gca().invert_yaxis()  # Invert y-axis to show the highest rank at the top
+    plt.tight_layout()
+    plt.savefig(output_file)
+    plt.close()
+
+def generate_graphs(results):
+    """
+    Generate graphs for bot and optimizer rankings.
+
+    Parameters:
+        results (dict): The results dictionary from the test_all.py script.
+    """
+    # Rank bots by average fitness
+    bot_averages = {
+        bot_name: sum(metrics['average'] for metrics in bot_results.values()) / len(bot_results)
+        for bot_name, bot_results in results.items()
+    }
+    sorted_bots = dict(sorted(bot_averages.items(), key=lambda item: item[1], reverse=True))
+    save_ranking_graph(
+        sorted_bots,
+        title="Ranking of Bots by Average Fitness",
+        xlabel="Average Fitness",
+        ylabel="Bots",
+        output_file="plots/bot_ranking.png"
+    )
+
+    # Rank optimizers by average performance
+    optimizer_averages = {}
+    for bot_results in results.values():
+        for optimizer_name, metrics in bot_results.items():
+            if optimizer_name not in optimizer_averages:
+                optimizer_averages[optimizer_name] = []
+            optimizer_averages[optimizer_name].append(metrics['average'])
+
+    optimizer_averages = {
+        optimizer_name: sum(averages) / len(averages)
+        for optimizer_name, averages in optimizer_averages.items()
+    }
+    sorted_optimizers = dict(sorted(optimizer_averages.items(), key=lambda item: item[1], reverse=True))
+    save_ranking_graph(
+        sorted_optimizers,
+        title="Ranking of Optimizers by Average Performance",
+        xlabel="Average Performance",
+        ylabel="Optimizers",
+        output_file="plots/optimizer_ranking.png"
+    )
 
 def test_bots_and_optimisers():
     bots_folder = os.path.join(os.path.dirname(__file__), 'bots')
@@ -96,6 +166,9 @@ def test_bots_and_optimisers():
     sorted_optimisers = sorted(optimiser_averages.items(), key=lambda item: item[1], reverse=True)
     for rank, (optimiser_name, avg) in enumerate(sorted_optimisers, start=1):
         print(f"{rank}. {optimiser_name}: Average Fitness: {avg:.2f}")
+
+    # Generate and save ranking graphs
+    generate_graphs(results)
 
 if __name__ == "__main__":
     test_bots_and_optimisers()
