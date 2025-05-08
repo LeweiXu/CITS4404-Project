@@ -127,32 +127,27 @@ def bf_optimiser(bot, data, population=20, elim_disp_events=5, reproduction_even
     """
 
     colony = initialise_population(bot.bounds, population)
-    colony_best = (-np.inf, None)
-    best = (-np.inf, None)  # Initialize best as a tuple with very low fitness
-    healths = []
+    colony_best, best = (-np.inf, None), (-np.inf, None)
 
     # Loop for each bacterium
     for _ in range(elim_disp_events):
         for _ in range(reproduction_events):
-            for i in range(population):
-                bacterium, directions = colony[i], None
-                bot.hyperparams = bacterium
-                best = (bot.fitness(data), bacterium) # Initialise the bacterium at time 0 as best
-
-                # Simulate chemotactic movement for each bacterium
-                for _ in range(chemotactic_steps):
+            for _ in range(chemotactic_steps):
+                fit = -np.inf  # Reset fitness for each bacterium
+                for i in range(population):
+                    previous_fit = fit
+                    bacterium, directions = colony[i], None
                     bot.hyperparams = bacterium
+
                     fit = bot.fitness(data)
+                    run = False if previous_fit > fit else True
+
                     if fit > best[0]: # Track the bacterium's best fitness
                         best = (fit, bacterium)
-                        run = True
-                    else:
-                        run = False
                     bacterium, directions = chemotactic_step(bounds=bot.bounds, colony=colony, bacterium=bacterium, run=run, last_direction=directions)
 
-                colony[i] = bacterium
-                healths.append((best[0], best[1]))  # Store the best fitness and bacterium from the chemotactic step
-                colony_best = best if best[0] > colony_best[0] else colony_best
+                    colony[i] = bacterium
+                    colony_best = best if best[0] > colony_best[0] else colony_best
 
             # Reproduction event occurs
             colony = reproduce(colony, data, bot, step_percentage=0.01)
