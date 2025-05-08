@@ -127,13 +127,14 @@ def bf_optimiser(bot, data, population=20, elim_disp_events=5, reproduction_even
     """
 
     colony = initialise_population(bot.bounds, population)
-    colony_best, best = (-np.inf, None), (-np.inf, None)
+    colony_best = (-np.inf, None)
 
     # Loop for each bacterium
     for _ in range(elim_disp_events):
         for _ in range(reproduction_events):
             for _ in range(chemotactic_steps):
-                fit = -np.inf  # Reset fitness for each bacterium
+                fit = -np.inf  # Reset fitness for each step
+                best = (-np.inf, None)  # Reset best for each step
                 for i in range(population):
                     previous_fit = fit
                     bacterium, directions = colony[i], None
@@ -142,12 +143,13 @@ def bf_optimiser(bot, data, population=20, elim_disp_events=5, reproduction_even
                     fit = bot.fitness(data)
                     run = False if previous_fit > fit else True
 
-                    if fit > best[0]: # Track the bacterium's best fitness
+                    if fit > best[0]: # Track the step's best fitness
                         best = (fit, bacterium)
                     bacterium, directions = chemotactic_step(bounds=bot.bounds, colony=colony, bacterium=bacterium, run=run, last_direction=directions)
 
                     colony[i] = bacterium
-                    colony_best = best if best[0] > colony_best[0] else colony_best
+
+                colony_best = best if best[0] > colony_best[0] else colony_best
 
             # Reproduction event occurs
             colony = reproduce(colony, data, bot, step_percentage=0.01)
