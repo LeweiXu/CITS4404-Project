@@ -48,7 +48,7 @@ def chemotactic_step(bounds, colony, bacterium, run=False, last_direction=None, 
             lower, upper = bound
             step_size = (upper - lower) * step_percentage
 
-            delta = np.random.uniform(-step_size, step_size) #+ effect
+            delta = np.random.uniform(-step_size, step_size) + effect
 
             if not tumble and last_direction is not None:
                 delta = last_direction[i]
@@ -60,7 +60,7 @@ def chemotactic_step(bounds, colony, bacterium, run=False, last_direction=None, 
             choices = bound
             idx = choices.index(int(round(param)))
 
-            move = int(np.random.choice([-1, 0, 1]) )#+ int(round(effect)))
+            move = int(np.random.choice([-1, 0, 1]) + int(round(effect)))
 
             if not tumble and last_direction is not None:
                 move = int(round(last_direction[i]))
