@@ -112,4 +112,4 @@ plt.title('Convergence Range of Different Bots with Different Optimisation Algor
 plt.tight_layout()
 plt.savefig("plots/convergences.png")
 
-plt.show()
+print("Plots saved to plots/convergences.png")

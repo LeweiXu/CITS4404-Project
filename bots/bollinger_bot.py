@@ -52,9 +52,6 @@ class bollinger_bot(bot):
         signals = np.diff(raw, prepend=0)
         return signals
 
-
-# ----------------------------------------
-# Example usage: use grid search to optimize hyperparameters
 bollinger_bot_instance = bollinger_bot()
 training_data = read_csv(
     TRAINING_DATASET_PATH, start_date="2015-01-01", end_date="2015-12-31"

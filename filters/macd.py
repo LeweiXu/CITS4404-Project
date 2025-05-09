@@ -1,3 +1,4 @@
+# Defunct not working code dunno why
 import numpy as np
 
 def macd(prices, fast_window, slow_window, signal_window):

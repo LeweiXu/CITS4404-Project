@@ -1,10 +1,7 @@
 from utils.plots import plot
 from utils.data_loader import read_csv
 
-def test_macd_bot_with_generated_data():
-    """
-    Generate 4 test datasets and test them against the MACD bot.
-    """
+def test_bollinger_bot():
     from bots.bollinger_bot import bollinger_bot
     default_bollinger_bot = bollinger_bot()
     default_bollinger_bot.hyperparams = [20, 2] # Traditional Bollinger Bands
@@ -24,9 +21,9 @@ def test_macd_bot_with_generated_data():
                 signals,
                 plot_name=f"bollinger_bot_BTC-Daily_default_{i}",
             )
-
+            print(f"Plot saved to plots/bollinger_bot_BTC-Daily_default_{i}.png")
         except Exception as e:
-            print(f"Error testing MACD bot on generated dataset {i}: {e}")
+            print(f"Error testing Bollinger bot on generated dataset {i}: {e}")
 
 if __name__ == "__main__":
-    test_macd_bot_with_generated_data()
+    test_bollinger_bot()

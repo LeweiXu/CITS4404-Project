@@ -3,6 +3,8 @@ import importlib
 from utils.data_loader import read_csv
 from config import *
 from utils.plots import plot
+import numpy as np
+np.random.seed(4404)
 
 # Dynamically import all bots from the bots/ folder
 def import_bots():

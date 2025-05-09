@@ -33,13 +33,11 @@ def hook_jeeves(bot_instance, data, max_iterations=100, step_size=1, reduction_f
 
                 # Handle discrete and continuous bounds
                 if isinstance(bot_instance.bounds[i], list):
-                    # Discrete parameter: select next/previous value in the list
                     current_index = bot_instance.bounds[i].index(hyperparams[i])
                     new_index = current_index + direction
                     if 0 <= new_index < len(bot_instance.bounds[i]):
                         new_hyperparams[i] = bot_instance.bounds[i][new_index]
                 elif isinstance(bot_instance.bounds[i], tuple):
-                    # Continuous parameter: adjust by step size
                     new_hyperparams[i] += direction * step_size
                     new_hyperparams[i] = max(min(new_hyperparams[i], bot_instance.bounds[i][1]), bot_instance.bounds[i][0])
 

@@ -54,6 +54,8 @@ def save_ranking_graph(data, title, xlabel, ylabel, output_file):
     plt.savefig(output_file)
     plt.close()
 
+    print(f"Graph saved as '{output_file}'")
+
 def generate_graphs(results):
     """
     Generate graphs for bot and optimizer rankings.
@@ -96,14 +98,14 @@ def generate_graphs(results):
         output_file="plots/optimizer_ranking.png"
     )
 
-def test_bots_and_optimisers():
+def test_bots_and_optimisers(start_date=None, end_date=None):
     bots_folder = os.path.join(os.path.dirname(__file__), 'bots')
     optimisers_folder = os.path.join(os.path.dirname(__file__), 'optimisers')
 
     bots = import_classes(bots_folder, 'bots')
     optimisers = import_classes(optimisers_folder, 'optimisers')
 
-    training_data = read_csv(TRAINING_DATASET_PATH)
+    training_data = read_csv(TRAINING_DATASET_PATH, start_date=start_date, end_date=end_date)
     dataset_2020 = read_csv(DATASET_2020_DAILY_PATH)
     dataset_2021 = read_csv(DATASET_2021_DAILY_PATH)
 
@@ -171,4 +173,7 @@ def test_bots_and_optimisers():
     generate_graphs(results)
 
 if __name__ == "__main__":
-    test_bots_and_optimisers()
+    # SET START AND END DATES HERE
+    # Default is None, which means the entire training dataset will be used
+    # "Rocky" dataset is from 2015-01-01 to 2015-10-31
+    test_bots_and_optimisers(start_date=None, end_date=None)
